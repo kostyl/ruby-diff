@@ -10,7 +10,9 @@ if File.exist?(base_file) && File.exist?(compare_file)
   compare_content = IO.readlines(compare_file)
 
   diff = Diff::Diff.new(base_content, compare_content)
-
+  p diffs = diff.compute
+  output = Diff::Output.new(diff)
+  puts output.text_format
   # puts diff.output.map { |line| line.join("\t") }.join("\n")
 else
   puts 'Error: Please provide valid file paths'

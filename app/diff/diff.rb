@@ -14,45 +14,55 @@ class Diff::Diff
     a_index = b_index = 0
 
     while a_index < indexes.count
-      bline = indexes[a_index]
-      if bline
-      	while b_index < bline
-      	  discardb(b_index, b[b_index])
+      b_line = indexes[a_index]
+      if b_line
+      	while b_index < b_line
+      	  discard_b(b_index)
       	  b_index += 1
       	end
-      	match(a_index, b_index)
+      	match
       	b_index += 1
       else
-	      discarda(a_index, a[a_index])
+	      discard_a(a_index)
       end
       a_index += 1
     end
 
     while a_index < a.count
-      discarda(a_index, a[a_index])
+      discard_a(a_index)
       a_index += 1
     end
 
     while b_index < b.count
-      discardb(b_index, b[b_index])
+      discard_b(b_index)
       b_index += 1
     end
 
-    match(a_index, b_index)
+    match
 
     diffs
   end
 
-  def match(ai, bi)
-    @diffs.push @curdiffs unless @curdiffs.empty?
-    @curdiffs = []
+  private
+
+  def match
+    diffs.push @batch unless @batch.empty?
+    @batch = []
   end
 
-  def discarda(i, elem)
-    @curdiffs.push ['-', i, elem]
+  def discard_a(index)
+    @batch.push({
+      from: :a,
+      index: index,
+      element: a[index]
+    })
   end
 
-  def discardb(i, elem)
-    @curdiffs.push ['+', i, elem]
+  def discard_b(index)
+    @batch.push({
+      from: :b,
+      index: index,
+      element: b[index]
+    })
   end
 end
