@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+
+require_relative '../app/diff'
+
+base_file = ARGV[0]
+compare_file = ARGV[1]
+
+if File.exist?(base_file) && File.exist?(compare_file)
+  base_content = IO.readlines(base_file)
+  compare_content = IO.readlines(compare_file)
+
+  diff = Diff::Diff.new(base_content, compare_content)
+
+  # puts diff.output.map { |line| line.join("\t") }.join("\n")
+else
+  puts 'Error: Please provide valid file paths'
+end
